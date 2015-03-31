@@ -1,7 +1,4 @@
 machine:
-  post:
-  - etcd --data-dir /tmp/etcd --name test
-        background: true 
 
 dependencies:
   pre:
@@ -13,5 +10,9 @@ dependencies:
 
 
 test:
+  pre:
+    - etcd --data-dir /tmp/etcd --name test:
+        background: true
+    - sleep 2
   override:
     - rvm-exec 2.1.5 bundle exec rspec
