@@ -1,3 +1,9 @@
+machine:
+  post:
+    - etcd --data-dir /tmp/etcd --name test:
+        background: true
+    - sleep 2
+
 dependencies:
   pre:
     - wget https://github.com/coreos/etcd/releases/download/v0.4.6/etcd-v0.4.6-linux-amd64.tar.gz
@@ -8,9 +14,5 @@ dependencies:
 
 
 test:
-  pre:
-    - etcd --data-dir /tmp/etcd --name test:
-        background: true
-    - sleep 2
   override:
     - rvm-exec 2.1.5 bundle exec rspec
