@@ -3,8 +3,10 @@ dependencies:
     - wget https://github.com/coreos/etcd/releases/download/v0.4.6/etcd-v0.4.6-linux-amd64.tar.gz
     - tar xzvf etcd-v0.4.6-linux-amd64.tar.gz
     - sudo cp etcd-v0.4.6-linux-amd64/etcd* /usr/local/bin/
+  override:
+    - 'rvm-exec 2.1.5 bundle install'
 
 
 test:
   override:
-    - etcd --data-dir /tmp/etcd --name test & sleep 2 && bundle exec rspec
+    - etcd --data-dir /tmp/etcd --name test & sleep 2 && rvm-exec 2.1.5 bundle exec rspec
