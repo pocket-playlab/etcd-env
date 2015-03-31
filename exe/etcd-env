@@ -5,7 +5,7 @@ require 'json'
 require 'net/http'
 
 def usage
-  puts "Usage: #{$PROGRAM_NAME} <etcd key> [ <etcd key> ... ] -- <command>"
+  puts "Usage: #{$PROGRAM_NAME} <etcd key> [ <etcd key> ... --] <command>"
 end
 
 def env_vars(keys)
@@ -15,7 +15,6 @@ def env_vars(keys)
       .map { |var| [var['key'].split('/').last, var['value']] }
       .to_h
   end
-
   result.reduce(:merge)
 end
 
@@ -44,8 +43,14 @@ def fetch(uri_str, limit = 10)
 end
 
 if __FILE__ == $PROGRAM_NAME
-  key_str, *commands = ARGV.join(" ").split(" -- ")
-  keys = key_str.split(" ")
+  sep = ARGV.index '--'
+  if sep
+    keys = ARGV[0...sep]
+    commands = ARGV[(sep + 1)..-1]
+  else
+    keys = ARGV.take(1)
+    commands = ARGV.drop(1)
+  end
   if commands.empty?
     usage
     exit 1

@@ -22,7 +22,7 @@ describe 'etcd-env' do
   it 'should pass environment variables to scripts' do
     `etcdctl set /test/FOO ham`
     `etcdctl set /test/BAR cheese`
-    expect(`./exe/etcd-env /test -- 'echo $FOO $BAR'`.chomp).to eq 'ham cheese'
+    expect(`./exe/etcd-env /test 'echo $FOO $BAR'`.chomp).to eq 'ham cheese'
   end
 
   it 'should work with big multiline variables' do
