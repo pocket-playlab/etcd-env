@@ -9,13 +9,14 @@ def usage
 end
 
 def env_vars(keys)
-  keys.map! do |key|
+  result = keys.map do |key|
     response = fetch "http://#{etcd_host}:#{etcd_port}/v2/keys#{key}"
     (JSON.parse(response)['node']['nodes'] || [])
       .map { |var| [var['key'].split('/').last, var['value']] }
       .to_h
   end
-  keys.reduce({}, :merge)
+
+  result.reduce(:merge)
 end
 
 def etcd_host

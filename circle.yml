@@ -8,5 +8,9 @@ dependencies:
 
 
 test:
+  pre:
+    - etcd --data-dir /tmp/etcd --name test
+        background: true
+    - sleep 2
   override:
-    - etcd --data-dir /tmp/etcd --name test & sleep 2 && rvm-exec 2.1.5 bundle exec rspec
+    - rvm-exec 2.1.5 bundle exec rspec
