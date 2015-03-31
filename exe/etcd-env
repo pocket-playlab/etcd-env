@@ -9,14 +9,13 @@ def usage
 end
 
 def env_vars(keys)
-  var = Array.new
-  keys.each do |key|
+  keys.map! do |key|
     response = fetch "http://#{etcd_host}:#{etcd_port}/v2/keys#{key}"
-    var << (JSON.parse(response)['node']['nodes'] || [])
+    (JSON.parse(response)['node']['nodes'] || [])
       .map { |var| [var['key'].split('/').last, var['value']] }
       .to_h
   end
-  var
+  keys.reduce({}, :merge)
 end
 
 def etcd_host
@@ -50,5 +49,5 @@ if __FILE__ == $PROGRAM_NAME
     usage
     exit 1
   end
-  exec env_vars(keys).reduce({}, :merge), *commands
+  exec env_vars(keys), *commands
 end
