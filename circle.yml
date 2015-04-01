@@ -22,5 +22,6 @@ deployment:
   rubygems:
     branch: ci
     commands:
+      - sed "s/<API_KEY>/$RUBYGEMS_API_KEY/" gem_credentials.template > ~/.gem/credentials
       - gem build etcd-env.gemspec
       - gem push etcd-env-*
