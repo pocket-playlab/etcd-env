@@ -1,7 +1,7 @@
 # coding: utf-8
 Gem::Specification.new do |spec|
   spec.name     = 'etcd-env'
-  spec.version  = '0.0.2'
+  spec.version  = '0.0.4'
   spec.authors  = ['Charles Martinot', 'Omar Khan']
   spec.email    = ['techadmin@playlab.com']
   spec.summary  = 'Run a command with environment variables from etcd'
