@@ -28,6 +28,13 @@ describe 'etcd-env' do
   it 'should work with big multiline variables' do
     cert = File.read('spec/cert')
     `etcdctl set /test/CERT < spec/cert`
-    expect(`./exe/etcd-env /test 'echo "$CERT"'`.chomp).to eq cert
+    expect(`./exe/etcd-env /test -- 'echo "$CERT"'`.chomp).to eq cert
+  end
+
+  it 'should be able to get keys in different namespaces' do
+    `etcdctl set /test/FOO ham`
+    `etcdctl set /test/BAR cheese`
+    `etcdctl set /blah/BLAH bacon`
+    expect(`./exe/etcd-env /test /blah -- 'echo $FOO $BAR $BLAH'`.chomp).to eq 'ham cheese bacon'
   end
 end

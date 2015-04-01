@@ -5,14 +5,17 @@ require 'json'
 require 'net/http'
 
 def usage
-  puts "Usage: #{$PROGRAM_NAME} <etcd key> <command>"
+  puts "Usage: #{$PROGRAM_NAME} <etcd key> [ <etcd key> ... --] <command>"
 end
 
-def env_vars(key)
-  response = fetch "http://#{etcd_host}:#{etcd_port}/v2/keys#{key}"
-  (JSON.parse(response)['node']['nodes'] || [])
-    .map { |var| [var['key'].split('/').last, var['value']] }
-    .to_h
+def env_vars(keys)
+  result = keys.reduce({}) do |memo, key|
+    response = fetch "http://#{etcd_host}:#{etcd_port}/v2/keys#{key}"
+    vars = (JSON.parse(response)['node']['nodes'] || [])
+      .map { |var| [var['key'].split('/').last, var['value']] }
+      .to_h
+    memo.merge(vars)
+  end
 end
 
 def etcd_host
@@ -39,11 +42,17 @@ def fetch(uri_str, limit = 10)
   end
 end
 
-if __FILE__ == $PROGRAM_NAME
-  key, *commands = ARGV
-  if commands.empty?
-    usage
-    exit 1
-  end
-  exec env_vars(key), *commands
+sep = ARGV.index '--'
+if sep
+  keys = ARGV[0...sep]
+  commands = ARGV[(sep + 1)..-1]
+else
+  keys = ARGV.take(1)
+  commands = ARGV.drop(1)
 end
+if commands.empty?
+  usage
+  exit 1
+end
+exec env_vars(keys), *commands
+
