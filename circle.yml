@@ -17,3 +17,10 @@ test:
     - sleep 2
   override:
     - bundle exec rspec
+
+deploy:
+  rubygems:
+    branch: master
+    commands:
+      - gem build etcd-env.gemspec
+      - gem push etcd-env-*
