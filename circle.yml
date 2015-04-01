@@ -20,7 +20,7 @@ test:
 
 deployment:
   rubygems:
-    branch: ci
+    branch: master
     commands:
       - sed "s/<API_KEY>/$RUBYGEMS_API_KEY/" gem_credentials.template > ~/.gem/credentials
       - chmod 0600 /home/ubuntu/.gem/credentials
