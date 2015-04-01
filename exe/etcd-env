@@ -42,18 +42,17 @@ def fetch(uri_str, limit = 10)
   end
 end
 
-if __FILE__ == $PROGRAM_NAME
-  sep = ARGV.index '--'
-  if sep
-    keys = ARGV[0...sep]
-    commands = ARGV[(sep + 1)..-1]
-  else
-    keys = ARGV.take(1)
-    commands = ARGV.drop(1)
-  end
-  if commands.empty?
-    usage
-    exit 1
-  end
-  exec env_vars(keys), *commands
+sep = ARGV.index '--'
+if sep
+  keys = ARGV[0...sep]
+  commands = ARGV[(sep + 1)..-1]
+else
+  keys = ARGV.take(1)
+  commands = ARGV.drop(1)
 end
+if commands.empty?
+  usage
+  exit 1
+end
+exec env_vars(keys), *commands
+
